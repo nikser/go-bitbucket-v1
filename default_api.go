@@ -6439,6 +6439,58 @@ func (a *DefaultApiService) GetPullRequestCommitsWithOptions(projectKey, reposit
 	return NewBitbucketAPIResponse(localVarHTTPResponse)
 }
 
+/* DefaultApiService
+Delete a task.  &lt;p&gt;  Note that only the task&#39;s creator, the context&#39;s author or an admin of the context&#39;s repository can delete a  task. (For a pull request task, those are the task&#39;s creator, the pull request&#39;s author or an admin on the  repository containing the pull request). Additionally a task cannot be deleted if it has already been resolved.
+* @param ctx context.Context for authentication, logging, tracing, etc.
+@param taskId the id identifying the task to delete
+@return */
+func (a *DefaultApiService) SetCommitBuildState(commitId string, localVarPostBody interface{}, localVarHTTPContentTypes []string) (*APIResponse, error) {
+	var (
+		localVarHTTPMethod = strings.ToUpper("Post")
+		localVarFileName   string
+		localVarFileBytes  []byte
+	)
+
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/build-status/1.0/commits/{commitId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"commitId"+"}", fmt.Sprintf("%v", commitId), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	r, err := a.client.prepareRequest(a.client.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(r)
+	if err != nil || localVarHTTPResponse == nil {
+		return NewBitbucketAPIResponse(localVarHTTPResponse)
+	}
+	defer localVarHTTPResponse.Body.Close()
+	if localVarHTTPResponse.StatusCode >= 300 {
+		bodyBytes, _ := ioutil.ReadAll(localVarHTTPResponse.Body)
+		return NewAPIResponseWithError(localVarHTTPResponse, reportError("Status: %v, Body: %s", localVarHTTPResponse.Status, bodyBytes))
+	}
+
+	return NewBitbucketAPIResponse(localVarHTTPResponse)
+}
+
 func (a *DefaultApiService) GetCommitBuildStatuses(commitSHA string) (*APIResponse, error) {
 	var (
 		localVarHTTPMethod = strings.ToUpper("Get")
